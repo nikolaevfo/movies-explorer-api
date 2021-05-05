@@ -6,15 +6,17 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
-const rateLimit = require('express-rate-limit');
+// const rateLimit = require('express-rate-limit');
 const router = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const limiter = require('./limiter');
 
+const errorsText = require('./utils/constants');
 const NotFoundError = require('./errors/not-found-err');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, MONGO_SERVER } = process.env;
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect(MONGO_SERVER, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
@@ -23,10 +25,10 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 const app = express();
 app.use(cookieParser());
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 1000,
-});
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 1000,
+// });
 
 const corsOptions = {
   origin: [
@@ -59,7 +61,7 @@ app.use((err, req, res, next) => {
     .status(statusCode)
     .send({
       message: statusCode === 500
-        ? `На сервере произошла ошибка ${err}`
+        ? errorsText.other[500]
         : message,
     });
   next();
