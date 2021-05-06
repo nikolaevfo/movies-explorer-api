@@ -16,14 +16,14 @@ const getUser = (req, res, next) => {
   User.findById(id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Запрашиваемый пользователь не найден');
+        throw new NotFoundError(errorsText.getUser.notFoundError);
       }
       res.send(user);
     }, (err) => {
       if (err.message === 'NotValidId') {
-        throw new NotFoundError('Запрашиваемый пользователь не найден');
+        throw new NotFoundError(errorsText.getUser.notFoundError);
       } else if (err.name === 'CastError') {
-        throw new RequestError('Переданы некорректные данные');
+        throw new RequestError(errorsText.getUser.validationError);
       }
     })
     .catch(next);
@@ -35,23 +35,23 @@ const updateUser = (req, res, next) => {
   User.findOne({ email })
     .then((userWithEmail) => {
       if (userWithEmail && (req.user._id.toString() !== userWithEmail._id.toString())) {
-        throw new MongoError(errorsText.editProfile[1]);
+        throw new MongoError(errorsText.editProfile.alreadyEmailError);
       }
       User.findByIdAndUpdate(req.user._id, data, { new: true, runValidators: true })
         .then((user) => {
           if (!user) {
-            throw new NotFoundError('Запрашиваемый пользователь не найден');
+            throw new NotFoundError(errorsText.editProfile.notFoundError);
           }
           res.send(user);
         })
         .catch(next);
     }, (err) => {
       if (err.message === 'NotValidId') {
-        throw new NotFoundError('Запрашиваемый пользователь не найден');
+        throw new NotFoundError(errorsText.editProfile.notFoundError);
       } else if (err.name === 'CastError') {
-        throw new RequestError(errorsText.editProfile[2]);
+        throw new RequestError(errorsText.editProfile.reqError);
       } else if (err.name === 'ValidationError') {
-        throw new RequestError('Ошибка валидации');
+        throw new RequestError(errorsText.editProfile.validationError);
       }
     })
     .catch(next);
@@ -65,7 +65,7 @@ const createUser = (req, res, next) => {
   return User.findOne({ email })
     .then((user) => {
       if (user) {
-        throw new MongoError(errorsText.signin[1]);
+        throw new MongoError(errorsText.signup.emailError);
       } else {
         bcrypt.hash(password, 10)
           .then((hash) => {
@@ -74,7 +74,7 @@ const createUser = (req, res, next) => {
             })
               .then((newUser) => {
                 if (!newUser) {
-                  throw new RequestError(errorsText.signin[2]);
+                  throw new RequestError(errorsText.signup.reqError);
                 }
                 const sendUser = {
                   name: newUser.name,
@@ -95,13 +95,13 @@ const login = (req, res, next) => {
   return User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new AuthError(errorsText.login[1]);
+        throw new AuthError(errorsText.signin.emailPasswordError);
       }
       return bcrypt
         .compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new AuthError(errorsText.login[1]);
+            throw new AuthError(errorsText.signin.emailPasswordError);
           }
           const token = jwt.sign(
             { _id: user._id },

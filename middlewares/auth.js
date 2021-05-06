@@ -11,7 +11,7 @@ const auth = (req, res, next) => {
   try {
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
   } catch (err) {
-    throw new AuthError(errorsText.login[3]);
+    throw new AuthError(errorsText.signin.wrongTokenError);
   }
 
   req.user = payload;
