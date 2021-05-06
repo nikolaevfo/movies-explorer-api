@@ -46,7 +46,7 @@ app.use(requestLogger);
 app.use(router);
 
 app.use('*', () => {
-  throw new NotFoundError('Страница не найдена');
+  throw new NotFoundError(errorsText.other[404]);
 });
 app.use(errorLogger);
 app.use(errors());
