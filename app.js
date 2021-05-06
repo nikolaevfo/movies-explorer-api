@@ -27,8 +27,8 @@ app.use(cookieParser());
 const corsOptions = {
   origin: [
     'http://localhost:3000',
-    // 'http://nikolaev.student.nomoredomains.club',
-    // 'https://nikolaev.student.nomoredomains.club',
+    // 'http://nikolaevfo.movies.nomoredomains.icu',
+    // 'https://nikolaevfo.movies.nomoredomains.icu',
   ],
   methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
