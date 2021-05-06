@@ -20,11 +20,11 @@ router.post('/signin', celebrate({
     password: Joi.string().required().min(6),
   }),
 }), login);
-router.post('/signout', signout);
 
 router.use(cookieParser());
 router.use(auth);
 
+router.post('/signout', signout);
 router.use('/users', userRouter);
 router.use('/movies', movieRouter);
 

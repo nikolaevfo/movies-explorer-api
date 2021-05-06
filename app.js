@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
-// const rateLimit = require('express-rate-limit');
 const router = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./limiter');
@@ -24,11 +23,6 @@ mongoose.connect(MONGO_SERVER, {
 
 const app = express();
 app.use(cookieParser());
-
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000,
-//   max: 1000,
-// });
 
 const corsOptions = {
   origin: [
@@ -50,6 +44,7 @@ app.use(bodyParser.json());
 
 app.use(requestLogger);
 app.use(router);
+
 app.use('*', () => {
   throw new NotFoundError('Страница не найдена');
 });
@@ -61,7 +56,7 @@ app.use((err, req, res, next) => {
     .status(statusCode)
     .send({
       message: statusCode === 500
-        ? errorsText.other[500]
+        ? errorsText.other[500] + err
         : message,
     });
   next();

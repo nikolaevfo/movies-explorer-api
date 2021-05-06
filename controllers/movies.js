@@ -59,7 +59,7 @@ const deleteMovie = (req, res, next) => {
       }
 
       if (movie.owner.toString() === req.user._id.toString()) {
-        movie.findByIdAndRemove(id)
+        Movie.findByIdAndRemove(id)
           .then((delMovie) => res.send(delMovie))
           .catch(next);
       } else {
@@ -75,51 +75,8 @@ const deleteMovie = (req, res, next) => {
     .catch(next);
 };
 
-// const likeCard = (req, res, next) => {
-//   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
-//     .then((card) => {
-//       if (!card) {
-//         throw new NotFoundError('Запрашивая карточка не найдена');
-//       }
-//       res.send(card);
-//     }, (err) => {
-//       if (err.message === 'NotValidId') {
-//         throw new NotFoundError('Запрашивая карточка не найдена');
-//       } else if (err.name === 'CastError') {
-//         throw new RequestError('Переданы некорректные данные');
-//       } else if (err.name === 'ValidationError') {
-//         throw new RequestError('Ошибка валидации');
-//       }
-//     })
-//     .catch(next);
-// };
-
-// const dislikeCard = (req, res, next) => {
-//   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
-//     .then((card) => {
-//       if (!card) {
-//         throw new NotFoundError('Запрашивая карточка не найдена');
-//       }
-//       res.send(card);
-//     }, (err) => {
-//       if (err.message === 'NotValidId') {
-//         throw new NotFoundError('Запрашивая карточка не найдена');
-//       } else if (err.name === 'CastError') {
-//         throw new RequestError('Переданы некорректные данные');
-//       } else if (err.name === 'ValidationError') {
-//         throw new RequestError('Ошибка валидации');
-//       }
-//     })
-//     .catch(next);
-// };
-
 module.exports = {
   getMovies,
   createMovie,
   deleteMovie,
-  // getCards,
-  // createCard,
-  // deleteCard,
-  // likeCard,
-  // dislikeCard,
 };

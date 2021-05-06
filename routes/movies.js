@@ -3,9 +3,7 @@ const { celebrate, Joi } = require('celebrate');
 
 const {
   getMovies, createMovie, deleteMovie,
-  // getCards, createCard, deleteCard, likeCard, dislikeCard,
 } = require('../controllers/movies');
-// const regex = new RegExp('^https?:\/\/w?w?w?\.?[-\w.~:/?#[\]@!$&\'()*+,;=]{2,256}#?');
 
 router.get('/', getMovies);
 
@@ -30,17 +28,5 @@ router.delete('/:movieId', celebrate({
     movieId: Joi.string().required().hex().length(24),
   }),
 }), deleteMovie);
-
-// router.put('/:cardId/likes', celebrate({
-//   params: Joi.object().keys({
-//     cardId: Joi.string().required().hex().length(24),
-//   }),
-// }), likeCard);
-
-// router.delete('/:cardId/likes', celebrate({
-//   params: Joi.object().keys({
-//     cardId: Joi.string().required().hex().length(24),
-//   }),
-// }), dislikeCard);
 
 module.exports = router;

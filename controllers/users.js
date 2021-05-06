@@ -11,30 +11,6 @@ const RequestError = require('../errors/req-err');
 const AuthError = require('../errors/auth-err');
 const MongoError = require('../errors/mongo-err');
 
-// const getUsers = (req, res, next) => {
-//   User.find({})
-//     .then((users) => res.send(users))
-//     .catch(next);
-// };
-
-// const getUserById = (req, res, next) => {
-//   const { id } = req.params;
-//   User.findById(id)
-//     .then((user) => {
-//       if (!user) {
-//         throw new NotFoundError('Запрашиваемый пользователь не найден');
-//       }
-//       res.send(user);
-//     }, (err) => {
-//       if (err.message === 'NotValidId') {
-//         throw new NotFoundError('Запрашиваемый пользователь не найден');
-//       } else if (err.name === 'CastError') {
-//         throw new RequestError('Переданы некорректные данные');
-//       }
-//     })
-//     .catch(next);
-// };
-
 const getUser = (req, res, next) => {
   const id = req.user._id;
   User.findById(id)
@@ -55,19 +31,20 @@ const getUser = (req, res, next) => {
 
 const updateUser = (req, res, next) => {
   const data = { ...req.body };
-  User.findOne(data.email)
-    .then((user) => {
-      if (user) {
+  const { email } = data;
+  User.findOne({ email })
+    .then((userWithEmail) => {
+      if (userWithEmail && (req.user._id.toString() !== userWithEmail._id.toString())) {
         throw new MongoError(errorsText.editProfile[1]);
       }
-    })
-    .catch(next);
-  User.findByIdAndUpdate(req.user._id, data, { new: true, runValidators: true })
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Запрашиваемый пользователь не найден');
-      }
-      res.send(user);
+      User.findByIdAndUpdate(req.user._id, data, { new: true, runValidators: true })
+        .then((user) => {
+          if (!user) {
+            throw new NotFoundError('Запрашиваемый пользователь не найден');
+          }
+          res.send(user);
+        })
+        .catch(next);
     }, (err) => {
       if (err.message === 'NotValidId') {
         throw new NotFoundError('Запрашиваемый пользователь не найден');
@@ -140,7 +117,7 @@ const login = (req, res, next) => {
               maxAge: 3600000,
               httpOnly: true,
               sameSite: 'None',
-              secure: true,
+              // secure: true,
             })
             .status(200).send({ user: sendUser });
         })
@@ -150,20 +127,20 @@ const login = (req, res, next) => {
 };
 
 const signout = (req, res, next) => {
-  res.clearCookie('jwt', {
-    httpOnly: true,
-    sameSite: 'None',
-    secure: true,
-  }).send({ message: 'файлы cookie очищены' });
-  next();
+  Promise.resolve(true)
+    .then(() => {
+      res.clearCookie('jwt', {
+        httpOnly: true,
+        sameSite: 'None',
+        secure: true,
+      }).send({ message: 'файлы cookie очищены' });
+    })
+    .catch(next);
 };
 
 module.exports = {
-  // getUsers,
-  // getUserById,
   createUser,
   updateUser,
-  // updateAvatar,
   login,
   getUser,
   signout,
