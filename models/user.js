@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const isEmail = require('validator/lib/isEmail');
+const errorsText = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -9,7 +10,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: (v) => isEmail(v),
-      message: 'Данные должны быть email',
+      message: errorsText.userSchema.emailError,
     },
   },
   password: {
@@ -20,7 +21,7 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minlength: [2, 'Имя не может быть короче двух символов'],
+    minlength: [2, errorsText.userSchema.nameMinLengthError],
     maxlength: 30,
   },
 });

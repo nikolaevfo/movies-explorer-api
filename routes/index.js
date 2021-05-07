@@ -7,9 +7,12 @@ const auth = require('../middlewares/auth');
 const userRouter = require('./users');
 const movieRouter = require('./movies');
 
+const errorsText = require('../utils/constants');
+const NotFoundError = require('../errors/not-found-err');
+
 router.post('/signup', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
+    name: Joi.string().required().min(2).max(30),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(6),
   }),
@@ -27,5 +30,8 @@ router.use(auth);
 router.post('/signout', signout);
 router.use('/users', userRouter);
 router.use('/movies', movieRouter);
+router.use('*', () => {
+  throw new NotFoundError(errorsText.other[404]);
+});
 
 module.exports = router;

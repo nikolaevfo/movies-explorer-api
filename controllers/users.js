@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-// const validator = require('validator');
 const User = require('../models/user');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -112,12 +111,13 @@ const login = (req, res, next) => {
             name: user.name,
             email: user.email,
           };
+          console.log(NODE_ENV);
           res
             .cookie('jwt', token, {
               maxAge: 3600000,
               httpOnly: true,
               sameSite: 'None',
-              secure: true,
+              secure: NODE_ENV === 'production',
             })
             .status(200).send({ user: sendUser });
         })

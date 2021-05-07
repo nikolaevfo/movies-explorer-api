@@ -19,7 +19,7 @@ router.post('', celebrate({
     nameRU: Joi.string().required().min(2),
     nameEN: Joi.string().required().min(2),
     thumbnail: Joi.string().required().regex(/^https?:\/\/[-a-zA-Z0-9@:%_+.~#?&/=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&/=]*)?/),
-    movieId: Joi.string().required(),
+    movieId: Joi.number().integer().required(),
   }),
 }), createMovie);
 

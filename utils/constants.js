@@ -18,6 +18,21 @@ const errorsText = {
     notFoundError: 'Запрашиваемый пользователь не найден.',
     validationError: 'Ошибка валидации.',
   },
+  userSchema: {
+    emailError: 'Данные должны быть email',
+    nameMinLengthError: 'Имя не может быть короче двух символов.',
+  },
+  movieCreate: {
+    validationError: 'Ошибка валидации.',
+  },
+  movieDelete: {
+    notFoundError: 'Запрашиваемый фильм не найден.',
+    forbiddenError: 'Вы не можете удалить не свой фильм.',
+    requestError: 'Переданы некорректные данные.',
+  },
+  movieSchema: {
+    urlError: 'Данные должны быть ссылкой.',
+  },
   other: {
     500: 'На сервере произошла ошибка.',
     404: 'Страница по указанному маршруту не найдена.',

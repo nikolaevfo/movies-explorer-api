@@ -10,10 +10,9 @@ const router = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./limiter');
 
-const errorsText = require('./utils/constants');
-const NotFoundError = require('./errors/not-found-err');
+const errorsMiddleware = require('./middlewares/errors');
 
-const { PORT = 3000, MONGO_SERVER } = process.env;
+const { PORT = 3000, MONGO_SERVER = 'mongodb://localhost:27017/moviesdb' } = process.env;
 
 mongoose.connect(MONGO_SERVER, {
   useNewUrlParser: true,
@@ -38,28 +37,15 @@ const corsOptions = {
 };
 app.use('*', cors(corsOptions));
 
+app.use(requestLogger);
 app.use(limiter);
 app.use(helmet());
 app.use(bodyParser.json());
 
-app.use(requestLogger);
 app.use(router);
 
-app.use('*', () => {
-  throw new NotFoundError(errorsText.other[404]);
-});
 app.use(errorLogger);
 app.use(errors());
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? errorsText.other[500] + err
-        : message,
-    });
-  next();
-});
+app.use(errorsMiddleware);
 
 app.listen(PORT);
