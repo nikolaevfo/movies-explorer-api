@@ -111,7 +111,6 @@ const login = (req, res, next) => {
             name: user.name,
             email: user.email,
           };
-          console.log(NODE_ENV);
           res
             .cookie('jwt', token, {
               maxAge: 3600000,
