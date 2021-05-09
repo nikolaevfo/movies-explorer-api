@@ -18,6 +18,9 @@ const errorsText = {
     notFoundError: 'Запрашиваемый пользователь не найден.',
     validationError: 'Ошибка валидации.',
   },
+  signout: {
+    clearCookie: 'Файлы cookie очищены.',
+  },
   userSchema: {
     emailError: 'Данные должны быть email',
     nameMinLengthError: 'Имя не может быть короче двух символов.',

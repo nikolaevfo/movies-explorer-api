@@ -132,7 +132,7 @@ const signout = (req, res, next) => {
         httpOnly: true,
         sameSite: 'None',
         secure: true,
-      }).send({ message: 'файлы cookie очищены' });
+      }).send({ message: errorsText.signout.clearCookie });
     })
     .catch(next);
 };
