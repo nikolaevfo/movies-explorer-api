@@ -21,7 +21,7 @@
 ```
 git clone https://github.com/nikolaevfo/movies-explorer-api.git
 ```
-- Установить пакеты webpack командой npm i
+- Установить сторонние библиотеки командой npm i
 - Запустить вертуальный сервер командой npm run dev
 - Для работы с проектом у вас должен быть установлен Node.js - https://nodejs.org/en/download/
 
