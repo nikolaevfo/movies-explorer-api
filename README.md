@@ -32,7 +32,7 @@
 - "winston": "^3.3.3"
 
 ### Развёртывание:
-- Клонировать репозиторий командой https://github.com/nikolaevfo/movies-explorer-api
+- Клонировать репозиторий командой
 ```
 git clone https://github.com/nikolaevfo/movies-explorer-api.git
 ```
